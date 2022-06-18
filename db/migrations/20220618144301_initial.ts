@@ -239,20 +239,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string('tracking_number').notNullable();
         table.string('eta').notNullable();
         table.string('original_eta').notNullable();
-        table
-          .integer('address_from')
-          .unsigned()
-          .references('id')
-          .inTable(TableNames.address)
-          .notNullable()
-          .onDelete('cascade');
-        table
-          .integer('address_to')
-          .unsigned()
-          .references('id')
-          .inTable(TableNames.address)
-          .notNullable()
-          .onDelete('cascade');
+        table.integer('address_from').unsigned();
+        table.integer('address_to').unsigned();
         createRef(table, TableNames.transcations);
         createRef(table, TableNames.serviceLevel);
         addDefaultColumns(table);
