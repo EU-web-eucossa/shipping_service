@@ -1,0 +1,16 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "paths": {
+      "@Shipping/*": ["./*"],
+
+      "@Models/*": ["./src/models/*"],
+      "@Repositories/*": ["./src/Repositories/*"],
+      "@Services/*": ["./src/services/*"]
+    },
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

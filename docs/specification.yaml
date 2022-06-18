@@ -1,0 +1,1299 @@
+openapi: 3.0.0
+servers:
+  - description: Shipping API Auto Mocking
+    url: https://virtserver.swaggerhub.com/OMONDIBRIAN392/shipping_service/1.0.0
+  - description: dev sever
+    url: https://localhost:4000/shipping
+  - description: prod server
+    url: https://172.16.0.1/shipping
+info:
+  description: This is a api specification for shipping service
+  version: "1.0.0"
+  title: Shipping Service
+  contact:
+    email: omondibrian392@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /shipment:
+    get:
+      tags:
+        - developers
+      summary: Retrieve an existing shipment by object id.
+      operationId: getShipment
+      description: Retrieve an existing shipment by object id.
+      parameters:
+        - in: query
+          name: id
+          description:  shipment object id.
+          required: true
+          schema:
+            type: string
+ 
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shipment'
+        '400':
+          description: bad input parameter
+        '401':
+          description: Access Denied
+
+    post:
+      tags:
+        - developers
+      summary: adds a new shipping request
+      operationId: addShipment
+      description: Adds a new Shipment request to the system
+      responses:
+        '201':
+          description: Shipment received and created successfully
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: Shipment received 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shipment'
+        description: Inventory item to add
+        
+      
+#  ----- Added lines  --------------------------------------
+
+  
+  /shipments:
+      get:
+        tags:
+          - developers
+        summary: Retrieve all existing shipments.
+        operationId: retrive all shipment data
+        description: Retrieve an existing shipment by object id.
+    
+        responses:
+          '200':
+            description: search results matching criteria
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Shipment'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+            
+            
+#  ----- rates lines  --------------------------------------
+
+  /shipment/{shipmentId}/rate/{currency}:
+     get:
+        tags:
+          - developers
+        description: Retrieve an existing rate by object id.
+        summary: Retrieve an existing rate by object id.
+        parameters:
+          - in: path
+            name: shipmentId
+            description:  shipment object id.
+            required: true
+            schema:
+              type: string
+          - in: path
+            name: currency
+            description:  the prefered currency for the requested rate.
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Rates'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied  
+  
+  
+#  ----- Address lines  --------------------------------------
+  /address:
+      post:
+        tags:
+          - developers
+        description: Creates a new address object.
+        summary: Creates a new address object.
+        responses:
+          '200':
+            description: successfully created address object
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Address'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "John Doe"
+                    description: First and Last Name of the addressee
+                  owner:
+                    type: string
+                    example: "johndoe@site.com"
+                    description: Username of the user who created the Address object.
+                  city:
+                    type: string
+                    example: "Nakuru"
+                    description: Name of a city. 
+                  zip:
+                    type: string
+                    example: "213"
+                    description: Postal code of an Address. 
+                  country:
+                    type: string
+                    example: "KE"
+                    description: Username of the user who created the Address object.
+                  phone:
+                    type: string
+                    example: "+254 755 341 939"
+                    description: Addresses containing a phone number allow carriers to call the recipient when delivering the Parcel.
+                  email:
+                    type: string
+                    description: E-mail address of the contact person.
+                    example: "johndoe@site.com"
+      get:
+        tags:
+          - developers
+        description: List all addresses.
+        summary: List all addresses.
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Address'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+  /address/{id}:                 
+      get:
+        tags:
+          - developers
+        description: Retrieve an existing address by object id.
+        summary: Retrieve an existing address by object id.
+        parameters:
+          - in: path
+            name: id
+            description:  address object id.
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Address'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+            
+  /address/{id}/validate:
+     get:
+        tags:
+          - developers
+        description: Validate an existing address by object id.
+        summary: Validate an existing address by object id.
+        parameters:
+          - in: path
+            name: id
+            description:  address object id.
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Address'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+            
+#  ----- parcel lines  --------------------------------------
+        
+            
+  /parcels:
+     post:
+        tags:
+          - developers
+        description: Creates a new parcel object.
+        summary: Creates a new parcel object.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  owner:
+                    type: string
+                    example: "johndoe@site.com"
+                    description: Username of the user who created the Parcel object.
+                  length:
+                    type: integer
+                    example: "20"
+                    description: Length of the Parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+                  width:
+                    type: integer
+                    example: "15"
+                    description: Width of the Parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+                  height:
+                    type: integer
+                    example: "12"
+                    description: Height of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+                  weight:
+                    type: integer
+                    example: "5"
+                    description: Weight of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+                  distance_unit:
+                    type: string
+                    enum: ["cm","m","in","ft","Yd"]
+                    example: "cm"
+                    description: The unit used for length, width and height.
+                  mass_unit:
+                    type: string
+                    enum: ["g","oz","lb","kg"]
+                    example: "kg"
+                    description: The unit used for weight.
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Parcels'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+            
+     get:
+        tags:
+          - developers
+        description: List all parcel objects.
+        summary: List all parcel objects.
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Parcels'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+      
+  /parcels/{id}:
+     get:
+        tags:
+          - developers
+        description: Retrieve an existing parcel by object id
+        summary: Retrieve an existing parcel by object id
+        parameters:
+          - in: path
+            name: id
+            description:  address object id.
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Parcels'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied
+            
+#  ----- transcations lines  --------------------------------------
+
+  /transactions:
+     post:
+        tags:
+          - developers
+        description: Creates a new transaction object and purchases the shipping label for the provided rate.
+        summary: Creates a new transaction object and purchases the shipping label for the provided rate.
+        requestBody:
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  rate:
+                    type: string
+                    example: "20"
+                    description: ID of the Rate object for which a Label has to be obtained.
+                  label_file_type:
+                    type: integer
+                    enum: [ "PNG","PNG_2.3x7.5","PDF","PDF_SINGLE_8X11","PDF_W_PSLIP_8x11","PDF_W_PSLIP_8x11"]
+                    example: "PDF_W_PSLIP_8x11"
+                    description: Specify the label file format for this label.
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Transcations'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied  
+    
+     get:
+        tags:
+          - developers
+        description: Retrieve an existing transaction by object id
+        summary: Retrieve an existing transaction by object id
+        parameters:
+          - in: query
+            name: id
+            description:  transcation object id.
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Transcations'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied    
+            
+  /transcations/results:
+     get:
+        tags:
+          - developers
+        description: Retrieve an existing transaction by object id
+        summary: Retrieve an existing transaction by object id
+        parameters:
+          - in: query
+            name: obj_gt
+            description:  object(s) created greater than a provided date time
+            required: false
+            schema:
+              type: string
+              
+          - in: query
+            name: obj_gte
+            description:  object(s) created greater than or equal to a provided date time
+            required: false
+            schema:
+              type: string
+              
+          - in: query
+            name: obj_lt
+            description:  object(s) created less than a provided date time
+            required: false
+            schema:
+              type: string
+          - in: query
+            name: obj_lte
+            description:  object(s) created less than or equal to a provided date time
+            required: false
+            schema:
+              type: string
+        responses:
+          '200':
+            description: successful query
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Transcations'
+          '400':
+            description: bad input parameter
+          '401':
+            description: Access Denied    
+
+# ---------- custom-items -------------------
+  # /customs/items/:
+  #   post:
+  #       tags:
+  #         - developers
+  #       description: Creates a new Customs Item object.
+  #       summary: Creates a new Customs Item object.
+  
+  #       responses:
+  #         '200':
+  #           description: successful query
+  #           content:
+  #             application/json:
+  #               schema:
+  #                 type: array
+  #                 items:
+  #                   $ref: '#/components/schemas/CutsomsItems'
+  #         '400':
+  #           description: bad input parameter
+  #         '401':
+  #           description: Access Denied    
+
+        
+components:
+  schemas:
+    Shipment:
+      type: object
+      required:
+        - address_from
+        - address_to
+        - parcels
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given Shipment object.
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of Shipment creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last Shipment update.
+        status:
+          type: string
+          enum: ["WAITING","QUEUED","SUCCESS","ERROR"]
+          description: >
+            "Waiting" shipments have been successfully submitted but not yet been processed.
+            "Queued" shipments are currently being processed.
+            "Success" shipments have been processed successfully, meaning that rate generation has concluded.
+            "Error" does not occur currently and is reserved for future use.
+        owner:
+          type: string
+          description: Username of the user who created the Shipment object.
+          example: johndoe@site.com,
+        address_from:
+          $ref: '#/components/schemas/Address'
+          description: ID of the Address object that should be used as sender Address.
+        address_to:
+          $ref: '#/components/schemas/Address'
+          description: ID of the Address object that should be used as recipient Address.
+        Parcel:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parcels'
+          description: Array of IDs of the Parcel objects to be shipped.
+        shipment_date:
+          type: string
+          format: date-time
+          description: Date the shipment will be tendered to the carrier.
+          example: '2016-08-29T09:12:33.001Z'
+        address_return:
+          $ref: '#/components/schemas/Address'
+          description: ID of the Address object where the shipment will be sent back to if it is not delivered
+        customes_declarations:
+          type: string
+          description: ID of the Customs Declarations object for an international shipment.
+        carrier_accounts:
+          description: An array of object_ids of the carrier account objects to be used for getting shipping rates for this shipment.
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierAccounts'
+        rates:
+          type: array
+          description: An array with all available rates.
+          items: 
+            $ref: '#/components/schemas/Rates'
+
+        messages:
+          type: array
+          description: An array containing info about current shipment
+          items: 
+            type: string
+          
+    Address:
+      type: object
+      required:
+        - city
+        - name
+        - zip
+        - country
+        - email
+        - phone 
+        - owner
+      properties:
+        is_complete:
+          type: boolean
+          example: true
+          description: >
+            Complete addresses contain all required values.
+            Incomplete addresses have failed one or multiple validations.
+            Incomplete Addresses are eligible for requesting rates but lack at least one required value for purchasing labels.
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of Address creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last Address update. Since you cannot update Addresses after they were created, this time stamp reflects the time when the Address was changed .
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given Address object. This ID is required to create a Shipment object.
+        name:
+          type: string
+          example: "John Doe"
+          description: First and Last Name of the addressee
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the Address object.
+        city:
+          type: string
+          example: "Nakuru"
+          description: Name of a city. 
+        zip:
+          type: string
+          example: "213"
+          description: Postal code of an Address. 
+        country:
+          type: string
+          example: "KE"
+          description: Username of the user who created the Address object.
+        phone:
+          type: string
+          example: "+254 755 341 939"
+          description: Addresses containing a phone number allow carriers to call the recipient when delivering the Parcel.
+        email:
+          type: string
+          description: E-mail address of the contact person.
+          example: "johndoe@site.com"
+          
+        is_residential:
+          type: boolean
+          description: Indicates whether the address provided is a residential address or not.
+          example: true
+        validate:
+          type: boolean
+          description: Set to true to validate Address object.
+          example: true
+    Parcels:
+      type: object
+      required:
+        - length
+        - name
+        - width
+        - height
+        - distance_unit
+        - weight 
+        - mass_unit
+        - owner
+      properties:
+        state:
+          type: string
+          example: "Valid"
+          description: A Parcel will only be valid when all required values have been sent and validated successfully.
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of Parcel creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last Parcel update. Since you cannot update Parcels after they were created, this time stamp reflects the time when the Parcel was changed.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given Parcel object. This ID is required to create a Shipment object.
+
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the Parcel object.
+        length:
+          type: integer
+          example: "20"
+          description: Length of the Parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+        width:
+          type: integer
+          example: "15"
+          description: Width of the Parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+        height:
+          type: integer
+          example: "12"
+          description: Height of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+        weight:
+          type: integer
+          example: "5"
+          description: Weight of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+        distance_unit:
+          type: string
+          enum: ["cm","m","in","ft","Yd"]
+          example: "cm"
+          description: The unit used for length, width and height.
+        mass_unit:
+          type: string
+          enum: ["g","oz","lb","kg"]
+          example: "kg"
+          description: The unit used for weight. 
+    Rates:
+      type: object
+      required:
+        - length
+        - name
+        - width
+        - height
+        - distance_unit
+        - weight 
+        - mass_unit
+        - owner
+      properties:
+        attributes:
+          type: array
+          items: 
+            type: string
+          example: ['CHEAPEST', 'FASTEST','BESTVALUE']
+          description: An array containing specific attributes of this Rate in context of the entire shipment. Attributes can be assigned 'CHEAPEST', 'FASTEST', or 'BESTVALUE'.
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of Rate creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last Parcel update. Since you cannot update Parcels after they were created, this time stamp reflects the time when the Parcel was changed.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given Rate object.
+
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the rate object.
+        amount_local:
+          type: number
+          example: "1000"
+          description: Final Rate price, expressed in the currency used in the recipient's country.
+        currency_local:
+          type: string
+          example: "KSH"
+          description: Currency used in the recipient's country, refers to "amount_local". The official ISO 4217 currency codes are used, e.g. "KSH" or "RAND".
+        amount:
+          type: number
+          example: "1000"
+          description: Final Rate price, expressed in the currency used in the sender's country.
+        currency:
+          type: integer
+          example: "KSH"
+          description: Currency used in the sender's country, refers to "amount". The official ISO 4217 currency codes are used, e.g. "KSH" or "RAND".
+        provider:
+          type: string
+          example: "Deutsche Post DHL"
+          description: Carrier offering the rate, e.g., "G4S" or "Deutsche Post DHL".
+        provider_image_75:
+          type: string
+          example: "https://127.0.0.1/75/DHL.png"
+          description: URL to the provider logo with max. dimensions of 75*75px. Please refer to the provider's Logo Usage Guidelines before using the logo.
+        provider_image_200:
+          type: string
+          example: "https://127.0.0.1/200/DHL.png"
+          description: URL to the provider logo with max. dimensions of 200*200px. Please refer to the provider's Logo Usage Guidelines before using the logo.
+        ServiceLevel:
+          type: object
+          description: Contains details regarding the service level for the given rate.
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              example: "Standard Post"
+              description: Name of the Rate's servicelevel e.g "Standard Post"
+            token:
+              type: string
+              example: "dhl_saver"
+              description: Token of the Rate's servicelevel,
+            terms:
+              type: string
+              example: "tos"
+              description: Further clarification of the service.
+        estimated_days:
+          type: integer
+          example: 10
+          description: Estimated transit time (duration) in days of the Parcel at the given servicelevel. Please note that this is not binding, but only an average value as given by the provider.
+
+        duration_terms:
+          type: string
+          example: "Delivery within 1, 2, or 3 days based on where your package started and where it’s being sent."
+          description: Further clarification of the transit times. Often, this includes notes that the transit time as given in "days" is only an average, not a guaranteed time. 
+          
+        carrier_account:
+          type: string
+          example: "b741b99f95e841639b54272834bc478c"
+          description: Object ID of the carrier account that has been used to retrieve the rate.
+        zone:
+          type: string
+          example: "1"
+          description: The parcel's transit zone token. These tokens can vary depending on the provider.  
+    Transcations:
+      type: object
+      properties:
+        state:
+          type: string
+          example: "Valid or Invalid"
+          description: Indicates the validity of the Transaction object based on the given data, regardless of what the corresponding carrier returns.
+        status:
+          type: string
+          enum: ["WAITING","QUEUED","SUCCESS","ERROR","REFUNDED","REFUNDPENDING","REFUNDREJECTED"]
+          example: "WAITING"
+          description: Indicates the status of the Transaction.
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of Transaction creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last Transaction update.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given Transaction object.
+
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the Transaction object.
+        rate:
+          type: string
+          example: "20"
+          description: ID of the Rate object for which a Label has to be obtained.
+        label_file_type:
+          type: integer
+          enum: [ "PNG","PNG_2.3x7.5","PDF","PDF_SINGLE_8X11","PDF_W_PSLIP_8x11","PDF_W_PSLIP_8x11"]
+          example: "PDF_W_PSLIP_8x11"
+          description: Specify the label file format for this label.
+        tracking_number:
+          type: string
+          example: "12"
+          description: The carrier-specific tracking number that can be used to track the Shipment. 
+        tracking_status:
+          type: string
+          example: "UNKNOWN"
+          enum: ['UNKNOWN','DELIVERED', 'TRANSIT', 'FAILURE', 'RETURNED' ]
+          description: Indicates the high level status of the shipment
+        eta:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: The estimated time of arrival according to the carrier.
+        label_url:
+          type: string
+          example: "http:127.0.0.1/lable"
+          description: A URL pointing directly to the label in the format you've set in your settings.
+        commercial_invoice_url:
+          type: string
+          example: "http:127.0.0.1/lable"
+          description: A URL pointing to the commercial invoice only returned if the shipment is international 
+    CustomsItems:
+      type: object
+      description: Customs items are distinct items in your international shipment parcel.
+      properties:
+        state:
+          type: string
+          example: "Valid or Invalid"
+          description: Indicates the validity of the Customs Item.
+
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of object creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last object update.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given object.
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the object.
+        description:
+          type: string
+          example: "20"
+          description: Text description of your item.
+        qty:
+          type: integer
+          description: Quantity of this item in the shipment you send. Must be greater than 0.
+        net_weight:
+          type: number
+          description: Total weight of this item, i.e. quantity * weight per item.
+          
+        mass_unit:
+          type: string
+          enum: ["g","oz","lb","kg"]
+          example: "kg"
+          description: The unit used for weight. 
+          
+        value_amount:
+          type: number
+          example: "1200"
+          description: Total value of this item, i.e. quantity * value per item. 
+        value_currency:
+          type: string
+          example: "KSH"
+          description: Currency used for value_amount.
+        origin_country:
+          type: string
+          example: "KE"
+          description: Country of origin of the item. 
+        tariff_number:
+          type: string
+          example: "1234567890"
+          description: The tariff number of the item.
+    CustomsDeclaration:
+      type: object
+      required: 
+        - certify_signer
+        - certify
+        - items
+        - non_delivery_option
+        - contents_type
+        - contents_explanation
+        - aes_itn
+      description: Customs declarations are relevant information, including one or multiple customs items, you need to provide for customs clearance for your international shipments.
+      properties:
+        state:
+          type: string
+          example: "Valid or Invalid"
+          description: Indicates the validity of the Customs Item.
+
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of object creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last object update.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given object.
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the object.
+        certify_signer:
+          type: string
+          example: "Jane Doe"
+          description: Name of the person who created the customs declaration and is responsible for the validity of all information provided.
+        certify:
+          type: boolean
+          description: Expresses that the certify_signer has provided all information of this customs declaration truthfully.
+        items:
+          type: array
+          items:
+             $ref: '#/components/schemas/CustomsItems'
+          description: Distinct Parcel content items as Customs Items object_ids.
+          
+        non_delivery_option:
+          type: string
+          enum: ['ABANDON','RETURN']
+          example: "RETURN"
+          description: Indicates how the carrier should proceed in case the shipment can't be delivered. 
+          
+        contents_type:
+          type: string
+          enum: [ 'DOCUMENTS', 'GIFT', 'SAMPLE', 'MERCHANDISE', 'HUMANITARIAN_DONATION', 'RETURN_MERCHANDISE', 'OTHER']
+          example: "GIFT"
+          description: Type of goods of the shipment.
+        contents_explanation:
+          type: string
+          example: "expalanation ...."
+          description: Explanation of the type of goods of the shipment.
+        exporter_reference:
+          type: string
+          example: "1234567890"
+          description: Exporter reference of an export shipment. 
+        importer_reference:
+          type: string
+          example: "1234567890"
+          description: Importer reference of an import shipment. 
+        invoice:
+          type: string
+          example: "1234567890"
+          description: Invoice reference of the shipment.
+        lincence:
+          type: string
+          example: "1234567890"
+          description: License reference of the shipment.
+        certificate:
+          type: string
+          example: "1234567890"
+          description: Certificate reference of the shipment.
+        notes:
+          type: string
+          example: "1234567890"
+          description: Additional notes to be included in the customs declaration.
+          
+        aes_itn:
+          type: string
+          description: AES / ITN reference of the shipment.
+          example: " hdfdjk"
+        
+        invoice_charges:
+          description: An object holding optional invoiced charges data to be printed on the Commercial Invoice.
+          $ref: '#/components/schemas/InvoicedCharges'
+          
+        disclaimer:
+          type: string
+          description: Disclaimer for the shipment and customs information that have been provided.
+    InvoicedCharges:
+      type: object
+      description: Additional invoiced charges to be shown on the Customs Declaration Commercial Invoice
+      properties:
+        currency:
+          type: string
+          example: "KSH"
+          description: Currency for the invoiced charges amounts incurred on the end consumer.
+
+        total_shipping:
+          type: number
+          example: "69.99"
+          description: Total shiping paid by the buyer.
+        total_taxes:
+          type: number
+          example: 3.45,
+          description: Total taxes paid by the buyer.
+        total_duties:
+          type: number
+          example: 4.68,
+          description: Total duties paid by the buyer.
+        other_fees:
+          type: string
+          example: "3.00"
+          description: Other fees paid by the buyer.
+    ExporterIdentification:
+      type: object
+      description: Additional exporter identification that may be required to ship in certain countries Invoice
+      properties:
+        eori_number:
+          type: string
+          example: "PL1234567890ABCDE"
+          description: Economic Operators' Registration and Identification (EORI) number. Must start with a 2 character country code followed by a 6-17 character alphanumeric identifier
+
+        tax_id:
+          type: number
+          example: "69.99"
+          description: Tax Identification.   
+    TaxIdentification :
+      type: object
+      description: Tax identification that may be required to ship in certain countries. Typically used to assess duties on goods that are crossing a border.
+      properties:
+        number:
+          type: string
+          example: "PL1234567890ABCDE"
+          description: Tax identification number.
+        tax_type:
+          type: string
+          # enums: [ 'EIN','VAT','IOSS']
+          example: "EIN"
+          description: >  
+                    Type of tax identification.
+                    EIN - Employer Identification Number, also known as a Federal Tax identification Number.
+                    VAT - Value Added Tax identification number.
+                    IOSS - Import One-Stop Shop   
+    Manifest :
+      type: object
+      required: 
+        - carrier_account
+        - shipment_date
+        - address_from
+        
+      description: Manifests are close-outs of shipping labels of a certain day. Some carriers require manifests to properly process the shipments.
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of object creation.
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Date and time of last object update.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the given object.
+
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the object.
+        status:
+          type: string
+          enum: [ "QUEUED","SUCCESS", "ERROR" ]
+          example: "QUEUED"
+          description: Indicates the status of the manifest.
+        errors:
+          type: array
+          items:
+            type: string
+          example: []
+          description: An array of codes and messages describing the error that occurred if any.
+        address_from:
+          type: string
+          example: "d799c2679e644279b59fe661ac8fa488"
+          description: ID of the Address object that should be used as pickup address for the scan form.
+        shipment_date:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: All shipments to be submitted on this day will be closed out in (ISO 8601 date )
+        transactions:
+          type: array
+          items:
+            type: string
+          example: []
+          description: IDs transactions to use. 
+        documents:
+          type: array
+          items:
+            type: string
+          example: []
+          description: An array containing the URLs to all returned manifest documents. 
+    CarrierAccounts :
+      type: object
+      required: 
+        - carrier
+        - account_id
+        - parameters
+        
+      description: Carrier accounts are used as credentials to retrieve shipping rates and purchase labels from a shipping provider.
+      properties:
+        carrier:
+          type: string
+          example: "DHL"
+          description: Name of the carrier
+        account_id:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: Unique identifier of the account.To protect account information, this field will be masked in any API response.
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Unique identifier of the carrier account object.
+        parameters:
+          type: array
+          items:
+            type: string
+          example: [ "meter": "******" ]
+          description: An array of additional parameters for the account, such as e.g. password or token. 
+        active:
+          type: boolean
+          example: true
+          description: Determines whether the account is active. When creating a shipment,
+       
+        owner:
+          type: string
+          example: "johndoe@site.com"
+          description: Username of the user who created the carrier account object.
+          
+    TrackingStatus :
+      type: object
+      description: Tracking Status objects are used to track shipments.
+      properties:
+        carrier:
+          type: string
+          example: "DHL"
+          description: Name of the carrier of the shipment to track
+        tracking_number:
+          type: string
+          example: "9205590164917312751089"
+          description: Tracking number to track.
+        address_from:
+          $ref: '#/components/schemas/Address'
+          description: The sender address with city zip and country information.
+        address_to:
+          $ref: '#/components/schemas/Address'
+          description: The recipient address with city,zip and country information.
+  
+        eta:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: The estimated time of arrival according to the carrier, this might be updated by carriers during the life of the shipment.
+        original_eta:
+          type: string
+          format: date-time
+          example: "2021-06-15T10:24:20.121Z"
+          description: The estimated time of arrival according to the carrier at the time the shipment first entered the system
+        transaction:
+          type: string
+          example: "1275c67d754f45bf9d6e4d7a3e205314"
+          description: The object_id of the transaction associated with this tracking object. This field is visible only to the object owner of the transaction.
+        ServiceLevel:
+          type: object
+          description: The service level of the shipment as token and full name.
+          properties:
+            name:
+              type: string
+              example: "Standard Post"
+              description: Name of the Rate's servicelevel e.g "Standard Post"
+            token:
+              type: string
+              example: "dhl_saver"
+              description: Token of the Rate's servicelevel,
+            terms:
+              type: string
+              example: "tos"
+              description: Further clarification of the service.
+        tracking_status:
+          type: object
+          description: The latest tracking information of this shipment.
+          properties:
+            status:
+             type: string
+             description: Indicates the high level status of the shipment.
+             enum: ['UNKNOWN','PRE_TRANSIT','TRANSIT','DELIVERED','RETURNED','FAILURE' ]
+             example: 'TRANSIT'
+            status_details:
+             type: string
+             description: The human-readable description of the status.
+             example: "Your shipment has been accepted."
+            status_date:
+             type: string
+             format: date-time
+             example: "2021-06-15T10:24:20.121Z"
+             description: Date and time when the carrier scanned this tracking event. This is displayed in UTC.
+            status_location:
+             type: object
+             description: An object containing zip, city and country information of the tracking event.
+             properties:
+               city:
+                 type: string
+                 example: "Mombasa"
+               country:
+                 type: string
+                 example: 'KE'
+               zip:
+                 type: string
+                 example: '001'
+        tracking_history:
+          type: array
+          items: 
+            type: object
+            properties:
+              status:
+               type: string
+               description: Indicates the high level status of the shipment.
+               enum: ['UNKNOWN','PRE_TRANSIT','TRANSIT','DELIVERED','RETURNED','FAILURE' ]
+               example: 'TRANSIT'
+              status_details:
+               type: string
+               description: The human-readable description of the status.
+               example: "Your shipment has been accepted."
+              status_date:
+               type: string
+               format: date-time
+               example: "2021-06-15T10:24:20.121Z"
+               description: Date and time when the carrier scanned this tracking event. This is displayed in UTC.
+              status_location:
+               type: object
+               description: An object containing zip, city and country information of the tracking event.
+               properties:
+                 city:
+                   type: string
+                   example: "Mombasa"
+                 country:
+                   type: string
+                   example: 'KE'
+                 zip:
+                   type: string
+                   example: '001'
+          description: A list of tracking events, following the same structure as tracking_status. It contains a full history of all tracking statuses, starting with the earlier tracking event first.

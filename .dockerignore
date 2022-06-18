@@ -1,0 +1,25 @@
+#node modules
+node_modules/
+
+.nyc_output/
+.vscode/
+coverage
+docker-data/
+Dockerfile
+.Dockerignore
+__mocks__
+__tests__
+.github
+db
+
+npm-debug.log
+docker-compose.yaml
+# environment variables
+.env
+
+#Ignoring git and cache folders
+.git
+.cache
+
+#Ignoring all the markdown and class files
+*.md
