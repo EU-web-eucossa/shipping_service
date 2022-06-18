@@ -1,4 +1,3 @@
-import { config } from 'dotenv';
 /**
  * @fileOverview contains the various helper functions  for database operation.
  * @author Brian Omondi
@@ -15,13 +14,12 @@ import { config } from 'dotenv';
  };
  
  const createRef = (table: Knex.CreateTableBuilder, foreignTable: string) => {
+  //PlanetScale does not allow the use of foreign key constraints,
   return table
      .integer(`${foreignTable}_id`)
      .unsigned()
-     .references("_id")
-     .inTable(foreignTable)
      .notNullable()
-     .onDelete("cascade");
+    ;
  };
  
  export { addDefaultColumns, createRef };

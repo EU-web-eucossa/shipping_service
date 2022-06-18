@@ -37,3 +37,208 @@ model knex_migrations_lock {
   index     Int  @id @default(autoincrement()) @db.UnsignedInt
   is_locked Int?
 }
+
+model CarrierAccounts {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  carrier    String    @db.VarChar(255)
+  account_id String    @db.VarChar(255)
+  owner      String    @db.VarChar(255)
+  active     Boolean
+  parameters Json?
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.DateTime(0)
+  deletedAt  DateTime? @db.DateTime(0)
+}
+
+model CustomItems {
+  id                    Int       @id @default(autoincrement()) @db.UnsignedInt
+  state                 String    @db.VarChar(255)
+  status                String    @db.VarChar(255)
+  owner                 String    @db.VarChar(255)
+  description           String    @db.VarChar(255)
+  qty                   Int
+  net_weight            Int
+  mass_unit             String    @db.VarChar(255)
+  value_amount          Int
+  value_currency        String    @db.VarChar(255)
+  origin_country        String    @db.VarChar(255)
+  tariff_number         String    @db.VarChar(255)
+  CustomsDeclaration_id Int       @db.UnsignedInt
+  created_at            DateTime  @default(now()) @db.DateTime(0)
+  updated_at            DateTime  @default(now()) @db.DateTime(0)
+  deletedAt             DateTime? @db.DateTime(0)
+}
+
+model CustomsDeclaration {
+  id                   Int       @id @default(autoincrement()) @db.UnsignedInt
+  state                String    @db.VarChar(255)
+  owner                String    @db.VarChar(255)
+  certify_signer       String    @db.VarChar(255)
+  certify              String    @db.VarChar(255)
+  non_delivery_option  Int
+  contents_type        Int
+  contents_explanation String    @db.VarChar(255)
+  exporter_reference   Int
+  importer_reference   String    @db.VarChar(255)
+  invoice              String    @db.VarChar(255)
+  lincence             String    @db.VarChar(255)
+  certificate          String    @db.VarChar(255)
+  notes                String    @db.VarChar(255)
+  aes_itn              String    @db.VarChar(255)
+  disclaimer           String    @db.VarChar(255)
+  created_at           DateTime  @default(now()) @db.DateTime(0)
+  updated_at           DateTime  @default(now()) @db.DateTime(0)
+  deletedAt            DateTime? @db.DateTime(0)
+}
+
+model Document {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  url         String    @db.VarChar(255)
+  Manifest_id Int       @db.UnsignedInt
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  updated_at  DateTime  @default(now()) @db.DateTime(0)
+  deletedAt   DateTime? @db.DateTime(0)
+}
+
+model Error {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  code        String    @db.VarChar(255)
+  msg         String    @db.VarChar(255)
+  Manifest_id Int       @db.UnsignedInt
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  updated_at  DateTime  @default(now()) @db.DateTime(0)
+  deletedAt   DateTime? @db.DateTime(0)
+}
+
+model InvoicedCharges {
+  id                    Int       @id @default(autoincrement()) @db.UnsignedInt
+  currency              String    @db.VarChar(255)
+  total_shipping        Int
+  total_taxes           Int
+  total_duties          Int
+  other_fees            Int
+  CustomsDeclaration_id Int       @db.UnsignedInt
+  created_at            DateTime  @default(now()) @db.DateTime(0)
+  updated_at            DateTime  @default(now()) @db.DateTime(0)
+  deletedAt             DateTime? @db.DateTime(0)
+}
+
+model Manifest {
+  id                   Int       @id @default(autoincrement()) @db.UnsignedInt
+  owner                String    @db.VarChar(255)
+  status               String    @db.VarChar(255)
+  shipment_date        DateTime  @db.DateTime(0)
+  Transcations_id      Int       @db.UnsignedInt
+  Address_id           Int       @db.UnsignedInt
+  TaxIdentification_id Int       @db.UnsignedInt
+  created_at           DateTime  @default(now()) @db.DateTime(0)
+  updated_at           DateTime  @default(now()) @db.DateTime(0)
+  deletedAt            DateTime? @db.DateTime(0)
+}
+
+model Parcel {
+  id            Int       @id @default(autoincrement()) @db.UnsignedInt
+  state         String    @db.VarChar(255)
+  owner         String    @db.VarChar(255)
+  length        Int
+  width         Int
+  height        Int
+  weight        Int
+  distance_unit String    @db.VarChar(255)
+  mass_unit     String    @db.VarChar(255)
+  created_at    DateTime  @default(now()) @db.DateTime(0)
+  updated_at    DateTime  @default(now()) @db.DateTime(0)
+  deletedAt     DateTime? @db.DateTime(0)
+}
+
+model Rates {
+  id                 Int       @id @default(autoincrement()) @db.UnsignedInt
+  attributes         String    @db.VarChar(255)
+  owner              String    @db.VarChar(255)
+  amount_local       Int
+  currency_local     String    @db.VarChar(255)
+  amount             Int
+  currency           Int
+  provider           String    @db.VarChar(255)
+  provider_image_75  String?   @db.VarChar(255)
+  provider_image_200 String?   @db.VarChar(255)
+  estimated_days     Int?
+  duration_terms     String?   @db.VarChar(255)
+  carrier_account    String?   @db.VarChar(255)
+  zone               String?   @db.VarChar(255)
+  serviceLevel_id    Int       @db.UnsignedInt
+  created_at         DateTime  @default(now()) @db.DateTime(0)
+  updated_at         DateTime  @default(now()) @db.DateTime(0)
+  deletedAt          DateTime? @db.DateTime(0)
+}
+
+model TaxIdentification {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  tax_type   String    @db.VarChar(255)
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.DateTime(0)
+  deletedAt  DateTime? @db.DateTime(0)
+}
+
+model TrackingState {
+  id                Int       @id @default(autoincrement()) @db.UnsignedInt
+  status            String    @db.VarChar(255)
+  status_details    String    @db.VarChar(255)
+  status_date       DateTime  @db.DateTime(0)
+  status_location   String    @db.VarChar(255)
+  TrackingStatus_id Int       @db.UnsignedInt
+  created_at        DateTime  @default(now()) @db.DateTime(0)
+  updated_at        DateTime  @default(now()) @db.DateTime(0)
+  deletedAt         DateTime? @db.DateTime(0)
+}
+
+model TrackingStatus {
+  id              Int       @id @default(autoincrement()) @db.UnsignedInt
+  carrier         String    @db.VarChar(255)
+  tracking_number String    @db.VarChar(255)
+  eta             String    @db.VarChar(255)
+  original_eta    String    @db.VarChar(255)
+  address_from    Int       @db.UnsignedInt
+  address_to      Int       @db.UnsignedInt
+  Transcations_id Int       @db.UnsignedInt
+  serviceLevel_id Int       @db.UnsignedInt
+  created_at      DateTime  @default(now()) @db.DateTime(0)
+  updated_at      DateTime  @default(now()) @db.DateTime(0)
+  deletedAt       DateTime? @db.DateTime(0)
+}
+
+model Transcations {
+  id                     Int       @id @default(autoincrement()) @db.UnsignedInt
+  state                  String    @db.VarChar(255)
+  status                 String    @db.VarChar(255)
+  owner                  String    @db.VarChar(255)
+  rate                   String    @db.VarChar(255)
+  label_file_type        String    @db.VarChar(255)
+  tracking_number        String    @db.VarChar(255)
+  tracking_status        String    @db.VarChar(255)
+  eta                    String?   @db.VarChar(255)
+  label_url              String?   @db.VarChar(255)
+  commercial_invoice_url Int?
+  created_at             DateTime  @default(now()) @db.DateTime(0)
+  updated_at             DateTime  @default(now()) @db.DateTime(0)
+  deletedAt              DateTime? @db.DateTime(0)
+}
+
+model serviceLevel {
+  id    Int    @id @default(autoincrement()) @db.UnsignedInt
+  name  String @db.VarChar(255)
+  token String @db.VarChar(255)
+  terms Int
+}
+
+model statusLocation {
+  id               Int       @id @default(autoincrement()) @db.UnsignedInt
+  zip              String    @db.VarChar(255)
+  city             String    @db.VarChar(255)
+  status_date      DateTime  @db.DateTime(0)
+  country          String    @db.VarChar(255)
+  TrackingState_id Int       @db.UnsignedInt
+  created_at       DateTime  @default(now()) @db.DateTime(0)
+  updated_at       DateTime  @default(now()) @db.DateTime(0)
+  deletedAt        DateTime? @db.DateTime(0)
+}
