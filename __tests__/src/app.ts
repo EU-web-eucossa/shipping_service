@@ -15,8 +15,4 @@ describe('GET /', () => {
     
   });
 
-  it('runs on the specified port',async()=>{
-        // toEqual recursively checks every field of an object or array.
-    expect(app.get('PORT')).toEqual("4000");
-  })
 });
