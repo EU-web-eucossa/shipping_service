@@ -1,0 +1,39 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Address {
+  id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  is_complete    Boolean?  @default(false)
+  name           String    @db.VarChar(255)
+  owner          String    @db.VarChar(255)
+  city           String    @db.VarChar(255)
+  zip            String    @db.VarChar(255)
+  country        String    @db.VarChar(255)
+  phone          String    @db.VarChar(255)
+  email          String    @db.VarChar(255)
+  is_residential Boolean?  @default(false)
+  validate       Boolean?  @default(false)
+  created_at     DateTime  @default(now()) @db.DateTime(0)
+  updated_at     DateTime  @default(now()) @db.DateTime(0)
+  deletedAt      DateTime? @db.DateTime(0)
+}
+
+model knex_migrations {
+  id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  name           String?   @db.VarChar(255)
+  batch          Int?
+  migration_time DateTime? @db.Timestamp(0)
+}
+
+model knex_migrations_lock {
+  index     Int  @id @default(autoincrement()) @db.UnsignedInt
+  is_locked Int?
+}

@@ -1,1 +1,9 @@
 PORT=4000
+DATABASE_URL=<MYSql>
+
+database= shipping
+username=<USER>
+host=<HOST_URL>
+password=<PASSWORD>
+
+DB_CERT=<ROOT_SERVER_CERT>
