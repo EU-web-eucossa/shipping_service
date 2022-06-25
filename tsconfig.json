@@ -6,7 +6,7 @@
     "paths": {
       "@Shipping/*": ["./*"],
 
-      "@Models/*": ["./src/models/*"],
+      "@Models/*": ["./src/Dtos/*"],
       "@Repositories/*": ["./src/Repositories/*"],
       "@Services/*": ["./src/services/*"]
     },

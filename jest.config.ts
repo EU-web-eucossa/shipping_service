@@ -46,7 +46,7 @@ export default {
     '@Routes(.*)$': '<rootDir>/src/routes/$1',
     '@Services(.*)$': '<rootDir>/src/services/$1',
     '@Repositories(.*)$': '<rootDir>/src/Repositories/$1',
-    '@Models(.*)$': '<rootDir>/src/models/$1',
+    '@Models(.*)$': '<rootDir>/src/Dtos/$1',
     '@Shipping(.*)$': '<rootDir>/$1',
   },
 
