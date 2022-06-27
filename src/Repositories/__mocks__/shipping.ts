@@ -18,7 +18,7 @@ class MockedShippingRepo implements IShippingRepo{
     getParcel(id: string): Promise<Parcel> {
         throw new Error('Method not implemented.');
     }
-    createNewTranscation(trans: TranscationsDTO): Promise<String> {
+    createNewTranscation(trans: TranscationsDTO): Promise<string> {
         throw new Error('Method not implemented.');
     }
     getTranscation(id: string): Promise<TranscationsDTO> {
