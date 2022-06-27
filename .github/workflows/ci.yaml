@@ -55,7 +55,7 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - run: npm install
+    - run: npm install --legacy-peer-deps
     # - run: npm run migrations
     # - run: npm run seed 
     - run: npm run test 
