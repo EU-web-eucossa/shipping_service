@@ -2,100 +2,133 @@ import amqplib from 'amqplib';
 import qrcode from 'qrcode';
 import ejs from 'ejs';
 import pdf from 'html-pdf';
+import ShippingRepo from './Repositories/shipping_repo';
+import {AddressDTO} from './Dtos/address_dto';
+import {TranscationsDTO} from './Dtos/transcations.dto';
+import {Parcel} from './Dtos/parcel.dto';
+import {Payment} from './Dtos/payment.dto';
 
 export default async () => {
+  const repo = new ShippingRepo();
   const queue = 'NOTIFICATION_QUEUE';
-  const ordersQueue = 'ORDERS_QUEUE';
+  const paymentQueue = 'PAYMENT_QUEUE';
   const connUrl = 'amqp://guest:guest@146.190.230.41:5672/';
   const conn = await amqplib.connect(connUrl);
 
   const notification = await conn.createChannel();
   await notification.assertQueue(queue);
 
-  const orders = await conn.createChannel();
-  await orders.assertQueue(ordersQueue);
+  const paymentChnl = await conn.createChannel();
+  await paymentChnl.assertQueue(paymentQueue);
+
   // Listener
-  orders.consume(ordersQueue, msg => {
+  paymentChnl.consume(paymentQueue, async msg => {
     if (msg !== null) {
-      console.log('Recieved: order ', msg.content.toString());
-      orders.ack(msg);
-    } else {
-      console.log('Consumer cancelled by server');
-    }
-  });
+      const transcationMsg = JSON.parse(msg.content.toString());
+      console.log('Recieved: payment ', transcationMsg);
+      paymentChnl.ack(msg);
+      const payment: Payment = transcationMsg as any as Payment;
+      const {payer, id, create_time,transactions} = payment.payment;
+      const {email, shipping_address} = payer.payer_info;
+      const contact = new AddressDTO(
+        shipping_address.recipient_name,
+        shipping_address.city,
+        shipping_address.postal_code,
+        shipping_address.country_code,
+        '',
+        email
+      );
+      const address = await repo.addAddress(contact);
+      const transcationDetails = new TranscationsDTO(
+        '',
+        'Valid',
+        ' SUCCESS',
+        shipping_address.recipient_name,
+        transactions[0].related_resources[0].sale.transaction_fee.value,
+        'PDF_W_PSLIP_8x11',
+        '00123',
+        'TRANSIT',
+        '2021-06-15T10:24:20.121Z',
+        '+25471234567',
+        111
+      );
+      const parcel = new Parcel(
+        '',
+        'Valid',
+        shipping_address.recipient_name,
+        12,
+        12,
+        12,
+        'cm',
+        'g'
+      );
+      await repo.createParcel(parcel);
+      const transID = await repo.createNewTranscation(transcationDetails);
 
-  //notification
-  notification.consume(queue, msg => {
-    if (msg !== null) {
-      console.log('Recieved: notification ', msg.content.toString());
-      notification.ack(msg);
-    } else {
-      console.log('Consumer cancelled by server');
-    }
-  });
-
-  const order = {
-    qr_code: 'src',
-    products: [
-      {
-        name: 'camera',
-        url: 'http://localhost:4000/assets/lens.jpg',
-        price: 30000,
-        qty: 1,
-      },
-      {
-        name: 'speaker',
-        url: 'http://localhost:4000/assets/speaker.jpg',
-        price: 30000,
-        qty: 1,
-      },
-      {
-        name: ' cannon lens',
-        url: 'http://localhost:4000/assets/lens.jpg',
-        price: 30000,
-        qty: 1,
-      },
-    ],
-    order: {
-      id: 12345,
-      purchaseDate: format(new Date('Sun May 11,2022'), 'dd/MM/yyyy'),
-      shippedDate: format(new Date(Date.now()), 'dd/MM/yyyy'),
-      address: {
-        owner: 'John Doe',
-        city: 'Nakuru',
-        country: 'KE',
-        zip: '606-80100',
-        phone: '07123456',
-        email: 'johndoe@site.com',
-      },
-    },
-  };
-  // Sender
-  qrcode.toDataURL(order.order.id.toString(), async (err, src) => {
-    order.qr_code = src;
-    const html = await ejs.renderFile('views/invoice.ejs', order);
-
-    pdf.create(html).toBuffer(function (err, buffer) {
-      console.log('This is a pdf buffer:', Buffer.isBuffer(buffer));
-
-      const data = {
-        id: order.order.id,
-        cc: null,
-        bcc: null,
-        emailTo: ['otienochris98@gmail.com'],
-        subject: 'ORDER CONFIRMATION NOTIFICATION',
-        messageInHtml: html,
-        attachments: [
+      const order = {
+        qr_code: 'src',
+        products: [
           {
-            originalFileName: 'invoice.pdf',
-            contentInBytes: buffer.toString('base64'),
+            name: 'camera',
+            url: 'http://localhost:4000/assets/lens.jpg',
+            price: 30000,
+            qty: 1,
+          },
+          {
+            name: 'speaker',
+            url: 'http://localhost:4000/assets/speaker.jpg',
+            price: 30000,
+            qty: 1,
+          },
+          {
+            name: ' cannon lens',
+            url: 'http://localhost:4000/assets/lens.jpg',
+            price: 30000,
+            qty: 1,
           },
         ],
+        order: {
+          id: transID,
+          purchaseDate: format(new Date(create_time), 'dd/MM/yyyy'),
+          shippedDate: format(new Date(Date.now()), 'dd/MM/yyyy'),
+          address,
+        },
       };
 
-      console.log(JSON.stringify(data))
-      notification.sendToQueue(queue, Buffer.from(JSON.stringify(data)));
-    });
+      // Sender
+      qrcode.toFile(
+        `assets/qr-${transID}.png`,
+        order.order.id.toString(),
+        async err => {
+          order.qr_code = `${process.env.HOSTURL}:${process.env.PORT}/assets/qr-${transID}.png`;
+          console.log(`assets/qr-${transID}.png`);
+          const html = await ejs.renderFile('views/invoice.ejs', order);
+
+          pdf.create(html).toBuffer(function (err, buffer) {
+            console.log('This is a pdf buffer:', Buffer.isBuffer(buffer));
+
+            const data = {
+              id: order.order.id,
+              cc: null,
+              bcc: null,
+              emailTo: ['omondibrian392@gmail.com'],
+              subject: 'ORDER CONFIRMATION NOTIFICATION',
+              messageInHtml: html,
+              attachments: [
+                {
+                  originalFileName: 'invoice.pdf',
+                  contentInBytes: buffer.toString('base64'),
+                },
+              ],
+            };
+
+            notification.sendToQueue(queue, Buffer.from(JSON.stringify(data)));
+          });
+        }
+      );
+    } else {
+      console.log('Consumer cancelled by server');
+    }
   });
 };
 
@@ -115,3 +148,5 @@ function format(x: Date, y: string): string {
     return x.getFullYear().toString().slice(-v.length);
   });
 }
+
+
