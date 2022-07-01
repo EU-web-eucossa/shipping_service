@@ -12,7 +12,7 @@ export default async () => {
   const repo = new ShippingRepo();
   const queue = 'NOTIFICATION_QUEUE';
   const paymentQueue = 'PAYMENT_QUEUE';
-  const connUrl = 'amqp://guest:guest@localhost:5672/';
+  const connUrl = process.env.RABBIT_URL as string;
   const conn = await amqplib.connect(connUrl);
 
   const notification = await conn.createChannel();
@@ -70,7 +70,7 @@ export default async () => {
         products: [
           {
             name: 'camera',
-            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg',
+            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg`,
             price: 30000,
             qty: 1,
           },
@@ -82,7 +82,7 @@ export default async () => {
           },
           {
             name: ' cannon lens',
-            url: '`${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg`,
+            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg`,
             price: 30000,
             qty: 1,
           },
