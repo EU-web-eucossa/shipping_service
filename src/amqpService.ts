@@ -28,7 +28,7 @@ export default async () => {
       console.log('Recieved: payment ', transcationMsg);
       paymentChnl.ack(msg);
       const payment: Payment = transcationMsg as any as Payment;
-      const {payer, id, create_time,transactions} = payment.payment;
+      const {payer, id, create_time,transactions} = payment;
       const {email, shipping_address} = payer.payer_info;
       const contact = new AddressDTO(
         shipping_address.recipient_name,
