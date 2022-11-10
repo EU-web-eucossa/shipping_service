@@ -27,8 +27,8 @@ export default async () => {
       const transcationMsg = JSON.parse(msg.content.toString());
       console.log('Recieved: payment ', transcationMsg);
       paymentChnl.ack(msg);
-      const payment: Payment = transcationMsg as any as Payment;
-      const {payer, id, create_time,transactions} = payment.payment;
+      const payment= transcationMsg;
+      const {payer, id, create_time,transactions} = payment;
       const {email, shipping_address} = payer.payer_info;
       const contact = new AddressDTO(
         shipping_address.recipient_name,
@@ -70,19 +70,18 @@ export default async () => {
         products: [
           {
             name: 'camera',
-            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg`,
-            price: 30000,
+            url: "https://res.cloudinary.com/forinda/image/upload/v1656294517/a6btijgzvesxummp92nj.webp",
             qty: 1,
           },
           {
             name: 'speaker',
-            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/speaker.jpg`,
+            url: `https://res.cloudinary.com/forinda/image/upload/v1656294517/a6btijgzvesxummp92nj.webp`,
             price: 30000,
             qty: 1,
           },
           {
             name: ' cannon lens',
-            url: `${process.env.HOSTURL}:${process.env.PORT}/assets/lens.jpg`,
+            url: "https://res.cloudinary.com/forinda/image/upload/v1656294517/a6btijgzvesxummp92nj.webp",
             price: 30000,
             qty: 1,
           },
@@ -109,9 +108,9 @@ export default async () => {
 
             const data = {
               id: order.order.id,
-              cc: null,
+              cc: ['ohtischris@gmail.com'],
               bcc: null,
-              emailTo: ['omondibrian392@gmail.com'],
+              emailTo: [email],
               subject: 'ORDER CONFIRMATION NOTIFICATION',
               messageInHtml: html,
               attachments: [
