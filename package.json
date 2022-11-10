@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "tsc": "tsc",
     "lint": "gts lint",
     "clean": "gts clean",
-    "compile": "tsc",
+    "compile": "npm-run-all tsc build:stubs",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
@@ -16,6 +17,7 @@
     "seed": "knex seed:run",
     "dev:start": "nodemon dist/src/index.js",
     "dev": "ts-node ./src/index.ts",
+    "build:stubs": "sh ./script.sh ",
     "start": "node dist/src/index.js"
   },
   "repository": {
@@ -30,12 +32,14 @@
   },
   "homepage": "https://github.com/eucossa-2022-sem2-web2-project/shipping_service#readme",
   "dependencies": {
+    "@grpc/grpc-js": "^1.7.3",
     "@prisma/client": "^3.15.2",
     "amqplib": "^0.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
+    "grpc-tools": "^1.11.3",
     "html-pdf": "^3.0.1",
     "knex": "^2.1.0",
     "module-alias": "^2.2.2",
@@ -56,6 +60,7 @@
     "@types/node": "^14.18.21",
     "@types/qrcode": "^1.4.2",
     "@types/supertest": "^2.0.12",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
     "gts": "^3.1.0",
     "helmet": "^5.1.0",
     "jest": "^28.1.1",

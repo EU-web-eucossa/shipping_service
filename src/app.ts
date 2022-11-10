@@ -1,7 +1,6 @@
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import amqpService from './amqpService';
 import express, { Application} from 'express';
 import {config} from 'dotenv';
 
@@ -13,7 +12,6 @@ const app: Application = express();
 app.set('PORT', process.env.PORT || '4040');
 app.set('view engine', 'ejs');
 // app.set('views', path.join(__dirname, 'templates'));
-amqpService();
 export async function start() {
   console.log('booting service ....');
   app.use('/assets', express.static('assets'));
